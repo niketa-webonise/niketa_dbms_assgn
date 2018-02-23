@@ -98,11 +98,45 @@ alter table order_details add constraint fk_dis_id foreign key(discount_id) refe
 
 alter table cart add constraint fk_us_id foreign key(user_id) references users(id);
 alter table cart add constraint fk_col_id foreign key(color_id) references colors(id);
-alter table cart add constarint fk_prod_id foreign key(product_id) references products(id);*/
+alter table cart add constarint fk_prod_id foreign key(product_id) references products(id);
 
 alter table products add constraint fk_sup_id foreign key(supplier_id) references suppliers(id);
 alter table products add constraint fk_color_pr_id foreign key(color_id) references colors(id);
 alter table products add constraint fk_discount_pr_id foreign key(discount_id) references discounts(id);
+
+alter table orders
+add column quantity int(10) not null;
+
+update users
+set type_id=1 where id=1;
+
+update users
+set type_id=2 where id=2;
+
+update users
+set type_id=1 where id=3;
+
+update users
+set type_id=1 where id=4;
+
+update users
+set type_id=1 where id=5;
+
+update users
+set type_id=2 where id=6;
+
+insert into discounts
+(id,type)values(1,0.8);
+
+insert into discounts
+(id,type)values(2,0.50);*/
+
+insert into discounts
+(id,type)values(3,0.30);
+
+insert into discounts
+(id,type)values(4,0.40);
+
 
 
 
