@@ -1,7 +1,9 @@
-/*create table type
+/*
+
+create table types
 (id int(10),
  name varchar(50) not null,
-primary key(id));
+ primary key(id));
 
 create table users
 (id int(10),
@@ -10,12 +12,8 @@ create table users
  email varchar(80) not null,
  phone int(10) not null,
  primary key(id),
+ unique(email),
  type_id int(10) REFERENCES type(id));
-
-create table types
-(id int(10),
- name varchar(50) not null,
- primary key(id));
 
 create table payments
 (id int(30),
@@ -32,15 +30,7 @@ create table orders
  user_id int(10) references users(id));
 
 
-create table users
-(id int(10),
- name text not null,
- pwd varchar(50) not null,
- email varchar(80) not null,
- phone int(10) not null,
- primary key(id),
- unique(email),
- type_id int(10) REFERENCES type(id));
+
 
 create table colors
 (id int(10),
