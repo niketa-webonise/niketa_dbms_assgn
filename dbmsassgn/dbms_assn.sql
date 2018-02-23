@@ -74,7 +74,35 @@ user_id int(10) references users(id),
 color_id int(10) references colors(id),
 product_id int(10) references products(id),
 primary key(id),
-unique(email));*/
+unique(email));
+
+alter table users add constraint fk_type_id foreign key(type_id) references types(id);
+alter table orders add constraint fk_pay_id foreign key(payment_id) references payments(id);
+
+alter table products add constraint fk_supplier_id foreign key(supplier_id) references suppliers(id);
+alter table products add constraint fk_discount_id foreign key(discount_id) references discountss(id);
+alter table products add constraint fk_color_id foreign key(color_id) references colors(id);
+
+
+insert into types(id,name)
+values(1,'buyer');
+
+insert into types(id,name)
+values(2,'inventory manager');
+
+alter table orders add constraint fk_user_id foreign key(user_id) references users(id);
+
+alter table order_details add constraint fk_o_id foreign key(order_id) references orders(id);
+alter table order_details add constraint fk_p_id foreign key(product_id) references products(id);
+alter table order_details add constraint fk_dis_id foreign key(discount_id) references discounts(id);
+
+alter table cart add constraint fk_us_id foreign key(user_id) references users(id);
+alter table cart add constraint fk_col_id foreign key(color_id) references colors(id);
+alter table cart add constarint fk_prod_id foreign key(product_id) references products(id);*/
+
+alter table products add constraint fk_sup_id foreign key(supplier_id) references suppliers(id);
+alter table products add constraint fk_color_pr_id foreign key(color_id) references colors(id);
+alter table products add constraint fk_discount_pr_id foreign key(discount_id) references discounts(id);
 
 
 
