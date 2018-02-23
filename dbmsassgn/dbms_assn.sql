@@ -5,9 +5,9 @@
  pwd varchar(20) not null,
  type text not null,
  primary key(user_id),
- unique(email));*/
+ unique(email));
 
-/*create trigger trigger_name_check before insert on user
+create trigger trigger_name_check before insert on user
 for each row
 begin
 if name like '^[a-zA-Z]+$' then
@@ -15,17 +15,17 @@ if name like '^[a-zA-Z]+$' then
 else
    set message='enter valid data';
 end if;
-end;*/
+end;
 
 alter table user
 modify column email varchar(80);
-/*
+
 insert into user(user_id,name,email,pwd,type)values(1,'Rakesh kumar','rakeshkumar@gmail.com',12345,'buyer');
 
 insert into user(user_id,name,email,pwd,type)values(2,'Rohit Kumar','rohitkumar@gmail.com','abcdef','invertory manager');*/
 
-insert into user(user_id,name,email,pwd,type)values(1,'Rakesh kumar','rakeshkumar@gmail.com',12345,'buyer');
+insert into user(user_id,name,email,pwd,type)values(3,'Rohan Jain','rohit.jain@outlook.com',445566,'buyer');
 
-insert into user(user_id,name,email,pwd,type)values(1,'Rakesh kumar','rakeshkumar@gmail.com',12345,'buyer');
+insert into user(user_id,name,email,pwd,type)values(4,'Monika Sharma','monikasharma@gmail.com','monika','invertory manager');
 
-insert into user(user_id,name,email,pwd,type)values(1,'Rakesh kumar','rakeshkumar@gmail.com',12345,'buyer');
+insert into user(user_id,name,email,pwd,type)values(5,'Swati Gupta','swatigupta12@gmail.com','swatigupta','buyer');
