@@ -1,7 +1,7 @@
-/*
+
 
 create table types
-(id int(10),
+(id int(10) auto_increment,
  name varchar(50) not null,
  primary key(id));
 
@@ -11,25 +11,53 @@ create table users
  pwd varchar(50) not null,
  email varchar(80) not null,
  phone int(10) not null,
+ type_id int(10),
  primary key(id),
  unique(email),
- type_id int(10) REFERENCES type(id));
+ foreign key(type_id) REFERENCES types(id));
 
-create table payments
-(id int(30),
- status varchar(40) not null,
+
+create table payment_statuses
+	(id int(10) ,
+	 name varchar(50) not null,
+	 primary key(id)
+		);
+
+create table payment_modes
+(id int(10) ,
+ name varchar(30) not null, 
 primary key(id));
 
+create table shipping_statuses
+	(id int(10) ,
+	 name varchar(50) not null,
+	 primary key(id)
+		);
+
+	create table coupons
+(id int(10) unsigned ,
+	name varchar(50) not null,
+	discount_per int(10) not null,
+	primary key(id)
+ );
+
+
 create table orders
-(id int(10),
- order_number varchar(80),
- payment_id int(10) references payments(id),
- price int(10) not null,
- order_date date,
+(id int(10) ,
+customer_id int(10) ,
+ order_unique_id varchar(255),
+ payment_mode_id int(10),
+ payment_status_id int(10),
+ order_date date not null,
+ has_coupon tinyint(1) default 0,
+ coupon_id int(10) unsigned, 
+ shipping_statuses_id int(10),
  primary key(id),
- user_id int(10) references users(id));
-
-
+ foreign key(payment_mode_id) references payment_modes(id),
+ foreign key(payment_status_id) references payment_statuses(id),
+ foreign key(customer_id) references users(id),
+ foreign key(coupon_id)  references coupons(id),
+ foreign key(shipping_statuses_id) references shipping_statuses(id));
 
 
 create table colors
@@ -37,51 +65,34 @@ create table colors
  name varchar(30) not null,
  primary key(id));
 
-create table discounts
-(id int(10),
- type varchar(30) not null,
- primary key(id));
-
-create table suppliers
-(id int(10),
- name varchar(50) not null,
- primary key(id));
 
 create table products
-(id int(10),
- supplier_id int(10) references suppliers(id),
+(id int(10) ,
+ supplier_id int(10),
+ name varchar(20) not null,
  price int(20) not null,
- discount_id int(10) references discounts(id),
- color_id int(10) references colors(id),
- quantity int(5) not null,
+ color_id int(10),
  primary key(id),
- amount int(10) not null);
+ foreign key(color_id) references colors(id),
+ foreign key(supplier_id) references users(id));
 
-create table order_details
-(order_id int(10) references orders(id),
- product_id int(10) references products(id),
- price int(10),
- quantity int(5),
- total int(8),
- discount_id int(10) references discounts(id));
+create table order_product_map
+(order_id int(10),
+	product_id int(10),
+	quantity int(5) not null,
+foreign key(order_id) references orders(id),
+  foreign key(product_id) references products(id));
+ 
 
 
 create table cart(
-id int(10),
-phone int(10) not null,
-email varchar(50) not null,
-user_id int(10) references users(id),
-color_id int(10) references colors(id),
-product_id int(10) references products(id),
-primary key(id),
-unique(email));
+user_id int(10) not null,
+product_id int(10) not null,
+foreign key(user_id)  references users(id),
+foreign key(product_id) references products(id)
+);
 
-alter table users add constraint fk_type_id foreign key(type_id) references types(id);
-alter table orders add constraint fk_pay_id foreign key(payment_id) references payments(id);
-
-alter table products add constraint fk_supplier_id foreign key(supplier_id) references suppliers(id);
-alter table products add constraint fk_discount_id foreign key(discount_id) references discountss(id);
-alter table products add constraint fk_color_id foreign key(color_id) references colors(id);
+--insert
 
 
 insert into types(id,name)
@@ -90,139 +101,38 @@ values(1,'buyer');
 insert into types(id,name)
 values(2,'inventory manager');
 
-alter table orders add constraint fk_user_id foreign key(user_id) references users(id);
+insert into users(id,name,phone,email,pwd,type_id)
+	values(1,'Ramesh',9677543288,'ramesh@gmail.com',password('1234'),2),
+	(2,'Suresh',9897543288,'suresh@gmail.com',password('4567'),1),
+    (3,'Anish',96654321,'hirlekar@gmail.com',password('123456'),2),
+    (4,'Niketa',12356789,'niketajain@gmail.com',password('334455'),1),
+    (5,'Mona',11223344,'mona@outlook.com',password('mona'),1);
 
-alter table order_details add constraint fk_o_id foreign key(order_id) references orders(id);
-alter table order_details add constraint fk_p_id foreign key(product_id) references products(id);
-alter table order_details add constraint fk_dis_id foreign key(discount_id) references discounts(id);
+    insert into payment_statuses(id,name)values(1,'in-process');
+    insert into payment_statuses(id,name)values(2,'complete');
 
-alter table cart add constraint fk_us_id foreign key(user_id) references users(id);
-alter table cart add constraint fk_col_id foreign key(color_id) references colors(id);
-alter table cart add constarint fk_prod_id foreign key(product_id) references products(id);
+    insert into payment_modes(id,name)values(1,'Cash'),(2,'Credit'),(3,'Debit');
 
-alter table products add constraint fk_sup_id foreign key(supplier_id) references suppliers(id);
-alter table products add constraint fk_color_pr_id foreign key(color_id) references colors(id);
-alter table products add constraint fk_discount_pr_id foreign key(discount_id) references discounts(id);
+    insert into shipping_statuses(id,name)values(1,'Packaging'),(2,'Dispatching'),
+    	(3,'Shipping'),(4,'Arriving'),(5,'Delivered');
 
-alter table orders
-add column quantity int(10) not null;
+    	insert into coupons(id,name,discount_per)values(1,'coupon1',10),
+    	(2,'coupon2',50),(3,'coupon3',35),(4,'coupon4',70),(5,'coupon5',80),(0,'no-coupon',0);
 
-update users
-set type_id=1 where id=1;
+    insert into orders(id,customer_id,order_unique_id,payment_mode_id,order_date,has_coupon,coupon_id,shipping_statuses_id,payment_status_id)
+    		values(1,1,111,1,'2017-01-1',0,0,1,1),(2,2,222,2,'2017-02-1',1,1,2,2),(3,3,333,3,'2016-01-11',1,5,5,1),
+    		(4,4,334,1,'2018-08-11',1,5,5,2);
 
-update users
-set type_id=2 where id=2;
-
-update users
-set type_id=1 where id=3;
-
-update users
-set type_id=1 where id=4;
-
-update users
-set type_id=1 where id=5;
-
-update users
-set type_id=2 where id=6;
-
-insert into discounts
-(id,type)values(1,0.8);
-
-insert into discounts
-(id,type)values(2,0.50);
-
-insert into discounts
-(id,type)values(3,0.30);
-
-insert into discounts
-(id,type)values(4,0.40);
-
-insert into payments(id,status)values(1,'complete');
-insert into payments(id,status)values(2,'in progress');
-insert into payments(id,status)values(3,'complete');
-insert into payments(id,status)values(4,'complete');
-
-insert into colors(id,name)values(1,'RED');
-insert into colors(id,name)values(2,'BLUE');
-insert into colors(id,name)values(3,'RED');
-insert into colors(id,name)values(4,'ORANGE');
-
-insert into suppliers(id,name)values(1,'Rakesh');
-insert into suppliers(id,name)values(2,'Rahu');
-insert into suppliers(id,name)values(3,'Rahul');
-insert into suppliers(id,name)values(4,'Rajni');
-insert into suppliers(id,name)values(5,'Anmol');
-
-insert into cart(id,phone,email,user_id,color_id,product_id)
-values(1,123456789,'j@gmail.com',1,1,1);
-
-insert into cart(id,phone,email,user_id,color_id,product_id)
-values(2,123456744,'jaw@gmail.com',2,1,1);
-
-insert into cart(id,phone,email,user_id,color_id,product_id)
-values(3,123456789,'jrg@gmail.com',1,2,2);
-
-insert into cart(id,phone,email,user_id,color_id,product_id)
-values(4,123456789,'jth@gmail.com',3,2,1);
-
-insert into cart(id,phone,email,user_id,color_id,product_id)
-values(5,123456789,'jqw@gmail.com',1,3,2);
-
-insert into orders(id,order_number,payment_id,price,order_date,user_id,quantity)
-values(1,1234,1,5000,'2017-09-1',2,30);
-
-insert into orders(id,order_number,payment_id,price,order_date,user_id,quantity)
-values(2,12122,1,15000,'2015-02-15',2,4);
-
-insert into orders(id,order_number,payment_id,price,order_date,user_id,quantity)
-values(3,111,2,6000,'2018-04-18',1,4);
-
-insert into orders(id,order_number,payment_id,price,order_date,user_id,quantity)
-values(4,1234,4,5000,'2018-01-21',4,8);
-
-insert into orders(id,order_number,payment_id,price,order_date,user_id,quantity)
-values(5,1234,1,5000,'2013-05-16',2,12);
-
-alter table products
-drop column amount;
-
-insert into products(id,supplier_id,price,discount_id,color_id,quantity)
-values(1,1,12000,1,1,20);
-
-insert into products(id,supplier_id,price,discount_id,color_id,quantity)
-values(2,2,12000,1,2,2);
-
-insert into products(id,supplier_id,price,discount_id,color_id,quantity)
-values(3,1,12000,1,3,3);
-
-insert into products(id,supplier_id,price,discount_id,color_id,quantity)
-values(4,3,12000,1,1,6);
-
-insert into products(id,supplier_id,price,discount_id,color_id,quantity)
-values(5,2,12000,1,4,40);
+    	insert into colors(id,name)values(1,'RED'),(2,'BLUE'),(3,'PINK'),(4,'ORANGE'),(5,'YELLOW');
 
 
 
-alter table order_details
-drop column price,drop column quantity,drop column total;
-*/
+    	insert into products(id,name,supplier_id,price,color_id)
+    	values(1,'jeans',1,1000,1),(2,'pyjamas',3,300,2),(3,'shirts',3,500,3),(4,'pen',3,10,1),(5,'rope',1,5,1);
 
-insert into order_details(order_id,product_id,discount_id)
-values(1,2,1);
+insert into order_product_map
+(order_id,product_id,quantity)values(1,1,10),(1,2,20),(2,2,2);
 
-insert into order_details(order_id,product_id,discount_id)
-values(2,2,1);
-
-insert into order_details(order_id,product_id,discount_id)
-values(2,1,1);
-
-
-insert into order_details(order_id,product_id,discount_id)
-values(3,2,1);
-
-
-insert into order_details(order_id,product_id,discount_id)
-values(1,4,1);
-
-
+insert into cart
+(user_id,product_id)values(1,1),(2,1),(2,2);
 
