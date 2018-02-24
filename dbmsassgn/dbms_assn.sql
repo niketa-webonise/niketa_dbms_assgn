@@ -131,8 +131,25 @@ insert into users(id,name,phone,email,pwd,type_id)
     	values(1,'jeans',1,1000,1),(2,'pyjamas',3,300,2),(3,'shirts',3,500,3),(4,'pen',3,10,1),(5,'rope',1,5,1);
 
 insert into order_product_map
-(order_id,product_id,quantity)values(1,1,10),(1,2,20),(2,2,2);
+(order_id,product_id,quantity)values(1,1,10),(1,2,20),(2,2,2),(4,1,10),(4,3,1);
 
 insert into cart
 (user_id,product_id)values(1,1),(2,1),(2,2);
+
+
+--view
+
+create view product_sold 
+	as
+select orders.id as `orderID`,sum(products.price*order_product_map.quantity) as `total cost`,
+	orders.order_date `	OrderDate`, coupons.discount_per as `Discount`,
+	 payment_modes.name  as `payment method`,payment_statuses.name as `payment status`
+		from orders
+		left join order_product_map on orders.id = order_product_map.order_id
+		left join products on order_product_map.product_id = products.id
+		inner join payment_modes on orders.payment_mode_id = payment_modes.id 
+		left join coupons on orders.coupon_id = coupons.id 
+		inner join payment_statuses on (orders.payment_status_id = payment_statuses.id and payment_statuses.name = 'complete' )
+		group by orders.id;
+
 
