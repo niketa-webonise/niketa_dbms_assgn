@@ -151,6 +151,9 @@ select orders.id as `orderID`,sum(products.price*order_product_map.quantity) as 
 		left join coupons on orders.coupon_id = coupons.id 
 		inner join payment_statuses on (orders.payment_status_id = payment_statuses.id and payment_statuses.name = 'complete' )
 		group by orders.id;
+		
+		
+--generated monthly report
 
 create view monthly_report
 	as
@@ -165,6 +168,7 @@ from orders
 		left join users on orders.customer_id = users.id 
 		group by orders.id;
 
+--created payments table
 create table payments
 (id int(10) auto_increment,
  order_id int(10),
@@ -172,6 +176,7 @@ create table payments
  primary key(id),
  foreign key(order_id) references orders(id));
 
+--created stored procedure
 DELIMITER $$ 
 CREATE PROCEDURE `order_payments_record`(IN order_id int,IN amount_paid int)
 BEGIN
