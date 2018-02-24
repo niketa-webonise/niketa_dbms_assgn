@@ -152,7 +152,7 @@ select orders.id as `orderID`,sum(products.price*order_product_map.quantity) as 
 		inner join payment_statuses on (orders.payment_status_id = payment_statuses.id and payment_statuses.name = 'complete' )
 		group by orders.id;
 
-create view monthy_report
+create view monthly_report
 	as
 select orders.id as `Order ID`,orders.order_date as `Order Date`,
 group_concat(products.name separator ',') as `Product Name` ,
@@ -164,3 +164,32 @@ from orders
 		left join products on order_product_map.product_id = products.id
 		left join users on orders.customer_id = users.id 
 		group by orders.id;
+
+create table payments
+(id int(10) auto_increment,
+ order_id int(10),
+ amount_paid int(10) not null,
+ primary key(id),
+ foreign key(order_id) references orders(id));
+
+DELIMITER $$ 
+CREATE PROCEDURE `order_payments_record`(IN order_id int,IN amount_paid int)
+BEGIN
+	insert into payments(`order_id`,`amount_paid`)values(order_id,amount_paid);
+	
+END$$
+
+DELIMITER ;
+
+
+
+
+START TRANSACTION;
+
+	call order_payments_record(1,1000);
+	call order_payments_record(2,2000);
+	call order_payments_record(3,3000);
+
+COMMIT;
+
+
