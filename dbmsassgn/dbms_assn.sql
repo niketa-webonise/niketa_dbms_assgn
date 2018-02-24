@@ -152,4 +152,15 @@ select orders.id as `orderID`,sum(products.price*order_product_map.quantity) as 
 		inner join payment_statuses on (orders.payment_status_id = payment_statuses.id and payment_statuses.name = 'complete' )
 		group by orders.id;
 
-
+create view monthy_report
+	as
+select orders.id as `Order ID`,orders.order_date as `Order Date`,
+group_concat(products.name separator ',') as `Product Name` ,
+group_concat(products.price separator ',') as `cost of each product`,
+sum(products.price*order_product_map.quantity) as `total cost of order`,
+users.name,users.email
+from orders
+		left join order_product_map on orders.id = order_product_map.order_id
+		left join products on order_product_map.product_id = products.id
+		left join users on orders.customer_id = users.id 
+		group by orders.id;
