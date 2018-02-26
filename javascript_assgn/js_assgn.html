@@ -1,0 +1,105 @@
+/*Write a JavaScript code that will prompt the user to enter a list of comma separated integers and returns the total occurrences of each number in an order(ascending/descending).
+
+INPUT: 	5,4,2,8,2,1,4,5,8,5,2,8,8,8
+
+OUTPUT: 	1: 1
+
+2: 3
+
+4: 2
+
+5: 2
+
+8: 5
+*/
+
+<html>
+<body>
+<script type="text/javascript">
+    var array_elements = prompt("enter numbers").split(",");
+    
+    array_elements.sort();
+
+    var current = null;
+    var cnt = 0;
+    for (var i = 0; i < array_elements.length; i++) {
+        if (array_elements[i] != current) {
+            if (cnt > 0) {
+                document.write(current + ' : ' + cnt );
+		document.write("<br>");
+	
+            }
+            current = array_elements[i];
+            cnt = 1;
+        } else {
+            cnt++;
+        }
+    }
+    if (cnt > 0) {
+        document.writeln(current + ' : ' + cnt );
+	document.write("<br>");
+    }
+
+
+</script>
+</body>
+</html>
+
+
+
+
+/*Create a simple JavaScript Calculator application with two input fields and two buttons (addition and subtraction). The user will input the two numbers and click any of the buttons, it should display the answer in the document below that. Handle all the cases of incorrect input parameters.
+
+INPUT 1: 6	INPUT 2: 5
+
+Click => ADDITION
+
+The sum is 11
+
+
+INPUT 1: 6	INPUT 2: 5
+
+Click => SUBTRACTION
+
+The difference is 1*/
+
+<html>
+<h1> Calculator Application</h1>
+
+<script>
+	function add(){
+	var num1 = parseInt(document.getElementById("number1").value);
+        var num2 = parseInt(document.getElementById("number2").value);
+        var add_ans = num1+num2;
+	var outputDiv = document.getElementById('output');
+	outputDiv.innerHTML = 'the sum is '+add_ans;
+	if(num1<0 && num2<0)
+	outputDiv.innerHTML = 'enter valid input';
+	}
+	function sub(){
+	var num1 = parseInt(document.getElementById("number1").value);
+        var num2 = parseInt(document.getElementById("number2").value);
+	sub_ans = num1-num2;
+	var outputDiv = document.getElementById('output');
+	outputDiv.innerHTML = 'the difference is '+sub_ans;
+	if(num1<0 && num2<0)
+	outputDiv.innerHTML = 'enter a valid input';
+	}
+
+</script>
+<body>
+enter number1 : <input type="number" id="number1"></input><br>
+enter number2: <input type="number" id="number2"></input>
+<br>
+<br>
+<br>
+<br>
+<button onclick="add()" id="add">ADD</button> 
+<br><br><br>
+<button onclick="sub()" id="sub">SUB</button>
+<br><br><br>
+<div id='output'>
+
+</div>
+</body>
+</html>
