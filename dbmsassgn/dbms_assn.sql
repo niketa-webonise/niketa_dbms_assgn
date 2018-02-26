@@ -1,4 +1,4 @@
-
+Database Schema Design Of ECommerce - https:/sqldbm.com//Project/SQLServer/Share/BJfRyExVJeioKgpvZhpoeQ
 
 create table types
 (id int(10) auto_increment,
