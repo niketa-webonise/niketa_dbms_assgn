@@ -1,0 +1,40 @@
+<html>
+<h1> Calculator Application</h1>
+
+<script>
+	function add(){
+	var num1 = parseInt(document.getElementById("number1").value);
+        var num2 = parseInt(document.getElementById("number2").value);
+        var add_ans = num1+num2;
+	var outputDiv = document.getElementById('output');
+	outputDiv.innerHTML = 'the sum is '+add_ans;
+	if(num1<0 && num2<0)
+	outputDiv.innerHTML = 'enter valid input';
+	}
+	function sub(){
+	var num1 = parseInt(document.getElementById("number1").value);
+        var num2 = parseInt(document.getElementById("number2").value);
+	sub_ans = num1-num2;
+	var outputDiv = document.getElementById('output');
+	outputDiv.innerHTML = 'the difference is '+sub_ans;
+	if(num1<0 && num2<0)
+	outputDiv.innerHTML = 'enter a valid input';
+	}
+
+</script>
+<body>
+enter number1 : <input type="number" id="number1"></input><br>
+enter number2: <input type="number" id="number2"></input>
+<br>
+<br>
+<br>
+<br>
+<button onclick="add()" id="add">ADD</button> 
+<br><br><br>
+<button onclick="sub()" id="sub">SUB</button>
+<br><br><br>
+<div id='output'>
+
+</div>
+</body>
+</html>
